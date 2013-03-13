@@ -1,0 +1,24 @@
+<html>
+<body>
+</body>
+    <div id="game"></div>
+    <div id="bigLobby"></div>
+    <script src="big.js"></script>
+    <script>
+    BIG.init (blabla, function(err, user){
+        if(err) ..
+        else
+            BIG.Popup('popup', BIG.user);
+        
+            BIG.ui({type:'lobby', element:'#bigLobby'});
+            BIG.ui({type:'bank'})
+            function(data){return "<ul><li>"+data.truc+"</li></ul>";}
+        })
+    </script>
+</html>
+
+<ul>
+{{#each users}}
+<li>{{name}}</li>
+{{/each}}
+</ul>
