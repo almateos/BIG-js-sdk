@@ -1,4 +1,4 @@
-define ['jquery','underscore', 'json2', 'socket.io', 'config'], ($, _, JSON, io, config) ->
+define ['jquery','underscore', 'json2', 'config'], ($, _, JSON, config) ->
 
     "use strict"
     
@@ -8,9 +8,9 @@ define ['jquery','underscore', 'json2', 'socket.io', 'config'], ($, _, JSON, io,
     socket = null
     
     authKeys =
-        apiId: null
-        userId: null
-        userToken: null
+        api_key: null
+        player_id: null
+        player_token: null
     
     # fake browser console if shitty browser
     console = window.console || {
@@ -23,7 +23,7 @@ define ['jquery','underscore', 'json2', 'socket.io', 'config'], ($, _, JSON, io,
     ###### PRIVATE METHODS #######
     # socket and socket events initialization
     initializeSocket = _.once (callback)->
-        socket = io.connect( config.socket.host || null, config.socket.settings || { 'sync disconnect on unload': true})
+        # socket = io.connect( config.socket.host || null, config.socket.settings || { 'sync disconnect on unload': true})
         # exemple event
         # socket.on 'defy', (message)-> console.log('defy', message)
         callback()
@@ -32,15 +32,16 @@ define ['jquery','underscore', 'json2', 'socket.io', 'config'], ($, _, JSON, io,
     ###### PUBLIC METHODS #######    
     ## SDK initialization
     init = _.once (keys, callback) ->
+        initialized = true
         authKeys = _.extend(authKeys, keys)
-        api 'get', '/users/me', {}, (err, response)->
+        api 'get', '/players/'+authKeys.player_id, {}, (err, response)->
             if err
+                initialized = false
                 console.error err
                 callback err, null
             else
-                initialized = true
                 initializeSocket ()->
-                    callback(null, user)
+                    callback(null, response)
             
     ## Generic rest api wrapper
     api = (method, endpoint, params, callback) ->
@@ -50,7 +51,7 @@ define ['jquery','underscore', 'json2', 'socket.io', 'config'], ($, _, JSON, io,
         callback({code: 405, error: "Bad method type"}, null) unless methods.indexOf(requestType) > -1
         
         # automatically add authentication params to url
-        url = (endpoint.match(/\?/) ? endpoint + '&' : endpoint + '?') + $.params(authKeys)
+        url = config.api.host + (if endpoint.match(/\?/) then endpoint + '&' else endpoint + '?') + $.param(authKeys)
         
         # jquery ajax settings
         requestSettings  =
@@ -73,6 +74,20 @@ define ['jquery','underscore', 'json2', 'socket.io', 'config'], ($, _, JSON, io,
         
         # aaand the request. finally
         $.ajax(requestSettings)
+    
+    
+    map = {
+        users:       ['user',  'CollectionView', {}]
+        'user-list': ['user',  'CollectionView', {}]
+        lobby:       ['lobby', 'View']
+        bank:        ['bank',  'View']
+    }
+    ui = (name, element, params) ->
+
+        test = map[name]
+        require [test[0]], (obj) ->
+            view = new obj[test[1]] _.extend({el: element}, test[2])
+            view.render()
         
     #ui = (params, callback) ->
     ###defy = (defy, callback) ->
@@ -96,5 +111,5 @@ define ['jquery','underscore', 'json2', 'socket.io', 'config'], ($, _, JSON, io,
     return {
         init: init
         api: api
-        defy: defy
+        ui: ui
     }        

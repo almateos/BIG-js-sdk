@@ -1,24 +1,25 @@
+<!doctype html >
 <html>
+<head>
+    <meta charset="utf-8">
+</head>
 <body>
-</body>
-    <div id="game"></div>
-    <div id="bigLobby"></div>
-    <script src="big.js"></script>
+    <div id="foo">hello word</div>
+    <!-- <script src="/assets/big.js"></script> -->
+    <script src="vendor/require.js"></script>
+    <script src="build/main.js"></script>
     <script>
-    BIG.init (blabla, function(err, user){
-        if(err) ..
-        else
-            BIG.Popup('popup', BIG.user);
-        
-            BIG.ui({type:'lobby', element:'#bigLobby'});
-            BIG.ui({type:'bank'})
-            function(data){return "<ul><li>"+data.truc+"</li></ul>";}
+    require(['BIG'], function(BIG) {
+        window.BIG = BIG;
+        BIG.init({
+            api_key: '403ede790824a5c905cf8a7a7bc90e7e',
+            player_id: 'player_1',
+            player_token: '59cab795e61259b5f5cf695bc6c90703'
+        },
+        function(err, data) {
+            console.log('api.init:', err, data)
         })
+    })
     </script>
+</body>
 </html>
-
-<ul>
-{{#each users}}
-<li>{{name}}</li>
-{{/each}}
-</ul>
