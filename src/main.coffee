@@ -20,6 +20,8 @@ require.config
         disableHelpers: true
         compileOptions: {}
 
+# player not included
+require ['BIG', 'bank', 'base', 'config', 'lobby', 'main']
 ###
 ((factory) ->
     if(typeof define == 'function' && define.amd)
