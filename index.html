@@ -39,7 +39,7 @@
 
               // Disconnect user (from api and lobbies)
               window.onbeforeunload = function (e) {
-                BIG.api('post', '/players', {id: 'player_1', online: 0}, function(err, data) { console.log(err, data); });
+                BIG.disconnect('player_1', function(err, data) { console.log(err, data) } );
               }
               
               //BIG.ui({type:'status', element: '#status'}, callback);

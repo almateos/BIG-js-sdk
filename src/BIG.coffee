@@ -1,6 +1,8 @@
 define ['jquery','underscore', 'json2', 'config'], ($, _, JSON, config) ->
 
     "use strict"
+
+    my = {}
     
     methods = ['GET','POST', 'PUT', 'DELETE']
     user = null
@@ -31,10 +33,10 @@ define ['jquery','underscore', 'json2', 'config'], ($, _, JSON, config) ->
     
     ###### PUBLIC METHODS #######    
     ## SDK initialization
-    init = _.once (keys, callback) ->
+    my.init = _.once (keys, callback) ->
         initialized = true
         authKeys = _.extend(authKeys, keys)
-        api 'get', '/players/' + authKeys.player_id, {}, (err, response)->
+        my.api 'get', '/players/' + authKeys.player_id, {}, (err, response)->
             if err
                 initialized = false
                 console.log err
@@ -42,9 +44,23 @@ define ['jquery','underscore', 'json2', 'config'], ($, _, JSON, config) ->
             else
                 initializeSocket ()->
                     callback(null, response)
+
+    my.disconnect = _.once (player_id, callback) ->
+      endpoint = '/players'
+      $.ajax({
+        url: config.api.host + (if endpoint.match(/\?/) then endpoint + '&' else endpoint + '?') + $.param(authKeys)
+        type: 'POST'
+        data: {id: player_id, online:0 }
+        dataType: 'json'
+        statusCode:
+          401: () -> callback({code:401, error: 'Authentication error'}, null)
+          403: () -> callback({code:403, error: 'Authorization error'}, null)
+        async: false
+      })
+
             
     ## Generic rest api wrapper
-    api = (method, endpoint, params, callback) ->
+    my.api = (method, endpoint, params, callback) ->
         return console.error('BIG.api called before BIG.init') unless initialized
         # check method validity
         requestType = method.trim().toUpperCase()
@@ -85,7 +101,7 @@ define ['jquery','underscore', 'json2', 'config'], ($, _, JSON, config) ->
         lobby:       ['lobby', 'View']
         bank:        ['bank',  'View']
     }
-    ui = (name, element, params) ->
+    my.ui = (name, element, params) ->
 
         test = map[name]
         require [test[0]], (obj) ->
@@ -111,8 +127,4 @@ define ['jquery','underscore', 'json2', 'config'], ($, _, JSON, config) ->
     ###
     
     #### expose public methods
-    return {
-        init: init
-        api: api
-        ui: ui
-    }
+    return my
