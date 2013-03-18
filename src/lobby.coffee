@@ -1,13 +1,20 @@
-define ['base', 'hbs!templates/lobby'], (base, template) ->
+define ['base', 'hbs!templates/lobby', 'BIG'], (base, template, BIG) ->
     class LobbyView extends base.View
         template: template
-        events: 
-            'click h1': 'shout'
-        shout: ()->
-            alert 'STOu'
+        events:
+            'click button': 'toggle'
+        toggle: (e)->
+            lobbyName = e.target.lastChild.innerHTML
+            for key, lobby of this.data.lobbies
+              if(lobby.name == lobbyName)
+                this.data.lobbies[key].connected = !lobby.connected
+                cmd = if lobby.connected then 'join' else 'disconnect'
+                BIG.api 'GET', '/lobbies/' + lobby.name, { cmd: cmd}, (err, response) ->
+                  console.log(err, response)
+                #console.log 2
+            
+            this.render(this.data)
             
     return {
         View: LobbyView
     }
-    
-    

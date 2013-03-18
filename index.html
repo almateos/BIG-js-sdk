@@ -5,6 +5,8 @@
 </head>
 <body>
     <div id="foo">hello word</div>
+    <div id="lobby"></div>
+    <div id="bank"></div>
     <!-- <script src="/assets/big.js"></script> -->
     <script src="vendor/require.js"></script>
     <script src="build/main.js"></script>
@@ -12,12 +14,35 @@
     require(['BIG'], function(BIG) {
         window.BIG = BIG;
         BIG.init({
-            api_key: '403ede790824a5c905cf8a7a7bc90e7e',
+            api_key: '39802830831bed188884e193d8465226',
             player_id: 'player_1',
-            player_token: '59cab795e61259b5f5cf695bc6c90703'
+            player_token: '2266aba42c25eaf2c75e895c99d26e77'
         },
         function(err, data) {
-            console.log('api.init:', err, data)
+            console.log('api.init:', err, data);
+            if(err)
+              console.log(err);
+            else
+              user = data.response;
+
+              data2 = { lobbies: [
+                { name: 'peanut', connected: false, amount: 0},
+                { name: 'bronze', connected: false, amount: 100},
+                { name: 'silver', connected: false, amount: 250},
+                { name: 'gold',   connected: false, amount: 500}
+              ]};
+              for(i=0; i<data2.lobbies.length; i++) data2.lobbies[i].disabled = user.real_balance < data2.lobbies[i].amount;
+              BIG.ui('lobby', '#lobby',  data2);
+
+              BIG.ui('bank', '#bank', { amount: user.real_balance, player_id: user.id });
+
+
+              // Disconnect user (from api and lobbies)
+              window.onbeforeunload = function (e) {
+                BIG.api('post', '/players', {id: 'player_1', online: 0}, function(err, data) { console.log(err, data); });
+              }
+              
+              //BIG.ui({type:'status', element: '#status'}, callback);
         })
     })
     </script>

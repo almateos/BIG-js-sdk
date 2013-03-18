@@ -12,9 +12,15 @@ TODO (as editor):
 
 - Wrap communication (server side):
 
-    - client connection 
+    - initlialisation (player first connection)
        ``BIG.init({apiKey:"", apiSecret: ""}, callback(user||false))`` 
         => POST {apiKey:"", apiSecret: ""} on http://almapi.be/game/auth
+
+    - set player status
+        ``BIG.``
+
+    - list users
+        ``BIG.api('get', 'users', callback(err, result))``
     
     - defi invitation
         

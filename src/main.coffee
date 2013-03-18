@@ -10,9 +10,9 @@ require.config
         i18nprecompile: '../vendor/i18nprecompile'
         templates:  '../templates'
     shim:
-        handlebars: 
+        handlebars:
             exports: 'Handlebars'
-        json2: 
+        json2:
             exports: 'JSON'
     hbs:
         templateExtension: "hbs"

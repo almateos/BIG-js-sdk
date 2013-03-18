@@ -1,7 +1,7 @@
 define ()->
     {
-        api: 
-            host: 'http://api.almateos.com'
+        api:
+            host: 'http://api.almateos.dev'
         socket:
-            host: 'http://rts.almateos.com'
+            host: 'http://rts.almateos.dev'
     }

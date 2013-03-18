@@ -1,1 +1,11 @@
-<h1> I AM THE LOBBY, UEFING MOTHERFUDGER</h1>
+<h1>LOBBIES</h1>
+<ul class="people_list">
+  {{#each lobbies}}
+  <li><button{{#if this.disabled }} disabled{{/if}}>{{#if this.connected }}disconnect from{{else}}join{{/if}} <span>{{this.name}}</span></button></li>
+  {{/each}}
+</ul>
+
+<pre>
+  {{#each lobbies}}
+  *{{this.name}}: {{this.amount}} rubies{{/each}}
+</pre>

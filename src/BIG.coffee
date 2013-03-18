@@ -2,7 +2,7 @@ define ['jquery','underscore', 'json2', 'config'], ($, _, JSON, config) ->
 
     "use strict"
     
-    methods = ['GET','POST', 'PUT', 'DELETE']    
+    methods = ['GET','POST', 'PUT', 'DELETE']
     user = null
     initialized = false
     socket = null
@@ -34,10 +34,10 @@ define ['jquery','underscore', 'json2', 'config'], ($, _, JSON, config) ->
     init = _.once (keys, callback) ->
         initialized = true
         authKeys = _.extend(authKeys, keys)
-        api 'get', '/players/'+authKeys.player_id, {}, (err, response)->
+        api 'get', '/players/' + authKeys.player_id, {}, (err, response)->
             if err
                 initialized = false
-                console.error err
+                console.log err
                 callback err, null
             else
                 initializeSocket ()->
@@ -47,12 +47,13 @@ define ['jquery','underscore', 'json2', 'config'], ($, _, JSON, config) ->
     api = (method, endpoint, params, callback) ->
         return console.error('BIG.api called before BIG.init') unless initialized
         # check method validity
-        requestType = method.trim().toUpperCase();
+        requestType = method.trim().toUpperCase()
         callback({code: 405, error: "Bad method type"}, null) unless methods.indexOf(requestType) > -1
         
         # automatically add authentication params to url
         url = config.api.host + (if endpoint.match(/\?/) then endpoint + '&' else endpoint + '?') + $.param(authKeys)
         
+
         # jquery ajax settings
         requestSettings  =
             url: url
@@ -65,9 +66,11 @@ define ['jquery','underscore', 'json2', 'config'], ($, _, JSON, config) ->
             global: false
             success: (data) -> callback(null, data)
         
+        # TODO: var below was undefined
+        jqueryParams = {}
         # if POST/PUT, put data in request payload instead of params
         if requestType == 'POST' || requestType == 'PUT'
-            jqueryParams = _.extend jqueryParams, 
+            jqueryParams = _.extend jqueryParams,
                 data: JSON.stringify(params)
                 processData: false
                 contentType: 'application/json'
@@ -87,7 +90,7 @@ define ['jquery','underscore', 'json2', 'config'], ($, _, JSON, config) ->
         test = map[name]
         require [test[0]], (obj) ->
             view = new obj[test[1]] _.extend({el: element}, test[2])
-            view.render()
+            view.render(params)
         
     #ui = (params, callback) ->
     ###defy = (defy, callback) ->
@@ -112,4 +115,4 @@ define ['jquery','underscore', 'json2', 'config'], ($, _, JSON, config) ->
         init: init
         api: api
         ui: ui
-    }        
+    }

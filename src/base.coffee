@@ -1,7 +1,9 @@
 define ['backbone','underscore','config'], (backbone, _, config) ->
 
     class View extends backbone.View
+        data: {}
         render: (data)->
+            this.data = data
             this.$el.html this.template(data)
         
     class Model extends backbone.Model
