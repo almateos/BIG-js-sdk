@@ -1,7 +1,7 @@
 <h1>LOBBIES</h1>
 <ul class="people_list">
   {{#each lobbies}}
-  <li><button{{#if this.disabled }} disabled{{/if}}>{{#if this.connected }}disconnect from{{else}}join{{/if}} <span>{{this.name}}</span></button></li>
+  <li><button id="{{this.name}}" {{#if this.disabled }} disabled{{/if}}>{{#if this.connected }}disconnect from{{else}}join{{/if}} {{this.name}}</button></li>
   {{/each}}
 </ul>
 

@@ -4,7 +4,7 @@ define ['base', 'hbs!templates/lobby', 'BIG'], (base, template, BIG) ->
         events:
             'click button': 'toggle'
         toggle: (e)->
-            lobbyName = e.target.lastChild.innerHTML
+            lobbyName = e.target.getAttribute('id')
             for key, lobby of this.data.lobbies
               if(lobby.name == lobbyName)
                 this.data.lobbies[key].connected = !lobby.connected
