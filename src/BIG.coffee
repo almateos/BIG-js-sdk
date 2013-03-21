@@ -101,12 +101,16 @@ define ['jquery','underscore', 'json2', 'config'], ($, _, JSON, config) ->
         lobby:       ['lobby', 'View']
         bank:        ['bank',  'View']
     }
+    my.views = {}
     my.ui = (name, element, params) ->
 
+      if(my.views[name] == undefined)
         test = map[name]
         require [test[0]], (obj) ->
-            view = new obj[test[1]] _.extend({el: element}, test[2])
-            view.render(params)
+            my.views[name] = new obj[test[1]] _.extend({el: element}, test[2])
+            my.views[name].render(params)
+      else
+        my.views[name].render(params)
         
     #ui = (params, callback) ->
     ###defy = (defy, callback) ->

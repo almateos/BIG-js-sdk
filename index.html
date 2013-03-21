@@ -7,9 +7,9 @@
     <div id="foo">hello word</div>
     <div id="lobby"></div>
     <div id="bank"></div>
-    <!--<script src="vendor/require.js"></script>-->
-    <script src="assets/js/BIG.js"></script>
-    <!--<script src="build/main.js"></script>-->
+    <!--<script src="assets/js/BIG.js"></script>-->
+    <script src="vendor/require.js"></script>
+    <script src="build/main.js"></script>
     <script>
     require(['BIG'], function(BIG) {
         window.BIG = BIG;
@@ -25,16 +25,18 @@
             else
               user = data.response;
 
-              data2 = { lobbies: [
-                { name: 'peanut', connected: false, amount: 0},
-                { name: 'bronze', connected: false, amount: 100},
-                { name: 'silver', connected: false, amount: 250},
-                { name: 'gold',   connected: false, amount: 500}
-              ]};
-              for(i=0; i<data2.lobbies.length; i++) data2.lobbies[i].disabled = user.real_balance < data2.lobbies[i].amount;
+              data2 = { 
+                lobbies: [
+                  { name: 'peanut', cost: 0},
+                  { name: 'bronze', cost: 100},
+                  { name: 'silver', cost: 250},
+                  { name: 'gold',   cost: 500}
+                 ],
+                 user: { balance: user.real_balance}
+              };
               BIG.ui('lobby', '#lobby',  data2);
 
-              BIG.ui('bank', '#bank', { amount: user.real_balance, player_id: user.id });
+              BIG.ui('bank', '#bank', { balance: user.real_balance, player_id: user.id });
 
 
               // Disconnect user (from api and lobbies)
