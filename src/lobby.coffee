@@ -20,7 +20,6 @@ define ['base', 'hbs!templates/lobby', 'BIG'], (base, template, BIG) ->
           if data != undefined
             for i in [0...data.lobbies.length]
               data.lobbies[i].disabled = data.user.balance < data.lobbies[i].cost
-          console.log data
           super(data)
             
     return {
