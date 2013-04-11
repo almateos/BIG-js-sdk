@@ -67,9 +67,12 @@ define ['jquery','underscore', 'json2', 'config'], ($, _, JSON, config) ->
         callback({code: 405, error: "Bad method type"}, null) unless methods.indexOf(requestType) > -1
         
         # automatically add authentication params to url
+      
         url = config.api.host + (if endpoint.match(/\?/) then endpoint + '&' else endpoint + '?') + $.param(authKeys)
+        if(method != 'POST' && method != 'GET')
+          url += "&_method=" + requestType
+          requestType = 'POST'
         
-
         # jquery ajax settings
         requestSettings  =
             url: url
@@ -89,9 +92,9 @@ define ['jquery','underscore', 'json2', 'config'], ($, _, JSON, config) ->
             jqueryParams = _.extend jqueryParams,
                 data: JSON.stringify(params)
                 processData: false
-                contentType: 'application/json'
+                contentType: 'application/json; Charset=UTF-8'
         
-        # aaand the request. finally
+        # and the request. finally
         $.ajax(requestSettings)
     
     

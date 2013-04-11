@@ -1,11 +1,10 @@
-<h1>LOBBIES</h1>
-<ul class="people_list">
+<ul>
   {{#each lobbies}}
-  <li><button id="{{this.name}}" {{#if this.disabled }} disabled{{/if}}>{{#if this.connected }}disconnect from{{else}}join{{/if}} {{this.name}}</button></li>
+  <li id="{{this.name}}" class="lobby-{{this.statusLabel}}"><!--<div class="lobby-cost">{{this.cost}}</div><div class="lobby-action">{{#if this.status }}disconnect{{else}}join{{/if}}</div>--></li>
   {{/each}}
 </ul>
 
-<pre>
+<!--<pre>
   {{#each lobbies}}
   *{{this.name}}: {{this.cost}} rubies{{/each}}
-</pre>
+</pre>-->
